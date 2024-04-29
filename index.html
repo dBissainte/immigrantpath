@@ -56,18 +56,18 @@
       basemap: "streets-navigation-vector"
       });
 
-      //creating the point for Gainesville Florida
-      const gainesvillepoint = {
+      //creating the center point
+      const center = {
        type: "point",
-       longitude: -82.3248,
-       latitude: 29.6516
+       longitude: 0.0000,
+       latitude: 0.0000
       };
 
       //creating the view
             const view = new MapView({
          container: "viewDiv", // Reference to the DOM node that will contain the view
          map: map, // References the map object
-         center: gainesvillepoint,
+         center: center, // Centers the view at a specific point
         zoom: 12
         });
 
