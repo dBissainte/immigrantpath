@@ -1,1 +1,114 @@
+<!DOCTYPE html>
+ <html>
+  <head>
+   <!-- meta for browser to allow for mobile fisrt design -->
+   <meta charset="utf-8" />
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+   <title>Data Collector for immigration policy makers</title>
+  
+    <!-- Adding the CSS for the survey button-->
+    <style>
+    html,
+    body,
+    #viewDiv {
+     padding: 0;
+     margin: 0;
+     height: 100%;
+     width: 100%;
+    }
 
+      .addRecordBtn {
+    position: absolute;
+    z-index: 10;
+    top: 10px;
+    right: 10px;
+    background-color: #0079c1;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+.addRecordBtn:hover {
+  background-color: #005a87;
+}
+
+.addRecordBtn:hover {
+  background-color: #005a87;
+}
+   </style>
+
+   <!-- importing the css and libraries for esri.js -->
+   <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css" />
+   <script src="https://js.arcgis.com/4.26/"></script>
+
+   <!-- loding the modules-->
+   <script>
+    require([ "esri/config" , "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Search", "esri/layers/FeatureLayer" ], (esriconfig, Map, MapView, Locate, Search, FeatureLayer) => {
+
+      //adding in API key
+      esriconfig.apikey = "AAPK38961f69b763446a8a93074277f6c658monrdVmdEHRWTyT7kHHF_0qYVXyDdCF8RQ2Z8pUR4r52dvVz8Ytp2CV1iEQsh2yt"
+
+      const map = new Map({
+      basemap: "satellite"
+      });
+
+      //creating the point for Gainesville Florida
+      const gainesvillepoint = {
+       type: "point",
+       longitude: -82.3248,
+       latitude: 29.6516
+      };
+
+      //creating the view
+            const view = new MapView({
+         container: "viewDiv", // Reference to the DOM node that will contain the view
+         map: map, // References the map object
+         center: gainesvillepoint,
+        zoom: 12
+        });
+
+        const locateBtn = new Locate({
+          view: view
+        });
+
+        // Create featurelayer from feature service 
+         const layer = new FeatureLayer({ 
+        // URL to the service 
+         url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_0d0479ae304d4d569c0cd4a62d6a2830_results/FeatureServer"
+         });
+
+        // Add the layer to the map
+        map.add(layer);
+
+        // Add the locate widget to the top left corner of the view
+        view.ui.add(locateBtn, {
+          position: "top-left"
+        });
+
+        const searchWidget = new Search({
+        view: view
+        });
+        // Adds the search widget below other elements in
+        // the top left corner of the view
+        view.ui.add(searchWidget, {
+        position: "top-left",
+        index: 2
+        });
+     });
+    </script>
+
+  </head>
+  <body>
+   <!-- hello world text to check if everything worked -->
+   <h1>Welcome to the immigrant path website. Here you can find information about the immigrants and you can also add your information. </h1>
+
+    <!-- adding the button to add a record -->
+    <a href="https://arcg.is/e1PKv"target="_blank" class="addRecordBtn">Click here to add your information</a>
+
+   <div id="viewDiv"></div>
+  </body>
+</html>
