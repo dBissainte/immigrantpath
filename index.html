@@ -20,7 +20,7 @@
       .addRecordBtn {
     position: absolute;
     z-index: 10;
-    top: 40px;
+    top: 80px;
     right: 10px;
     background-color: #0079c1;
     color: white;
@@ -30,15 +30,89 @@
     font-size: 16px;
     cursor: pointer;
     text-decoration: none;
-  }
-
-.addRecordBtn:hover {
-  background-color: #005a87;
 }
 
 .addRecordBtn:hover {
   background-color: #005a87;
 }
+
+.addRecordBtn:hover {
+  background-color: #005a87;
+}
+
+/* aading the notifications button */
+
+.notificationBtn {
+        position: absolute;
+        z-index: 10;
+        top: 120px; /* Adjust this value to position the button below the "Add Record" button */
+        right: 10px;
+        background-color: blue;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .notificationBtn:hover {
+        background-color: darkblue;
+    }
+    /* Styles for the buttons */
+    .btn {
+      position: absolute;
+      z-index: 10;
+      left: 10px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      width: 120px; /* Adjust this value to change the width of the buttons */
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+    }
+
+    .homeBtn {
+      top: 340px;
+      left: 100px;
+      background-color: darkblue;
+      color: white;
+    }
+
+    .govBtn {
+      top: 400px;
+      left: 100px;
+      background-color: darkblue;
+      color: white;
+    }
+
+    .agriBtn {
+      top: 460px;
+      left: 100px;
+      background-color: orange;
+      color: white;
+    }
+
+    .laborBtn {
+      top: 540px;
+      left: 100px;
+      background-color: lightblue;
+      color: white;
+    }
+
+    .downloadBtn {
+      top: 600px;
+      left: 100px;
+      background-color: darkblue;
+      color: white;
+      border-radius: 0; /* This will make the button square */
+    }
    </style>
 
    <!-- importing the css and libraries for esri.js -->
@@ -47,7 +121,7 @@
 
    <!-- loding the modules-->
    <script>
-    require([ "esri/config" , "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Search", "esri/layers/FeatureLayer" ], (esriconfig, Map, MapView, Locate, Search, FeatureLayer) => {
+    require([ "esri/config" , "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Search", "esri/layers/FeatureLayer", "esri/widgets/Editor"], (esriconfig, Map, MapView, Locate, Search, FeatureLayer, Editor) => {
 
       //adding in API key
       esriconfig.apikey = "AAPK38961f69b763446a8a93074277f6c658monrdVmdEHRWTyT7kHHF_0qYVXyDdCF8RQ2Z8pUR4r52dvVz8Ytp2CV1iEQsh2yt"
@@ -92,26 +166,84 @@
         const searchWidget = new Search({
         view: view
         });
-        // Adds the search widget below other elements in
-        // the top left corner of the view
+        // Adds the search widget in the top center of the view
         view.ui.add(searchWidget, {
         position: "top-left",
         index: 2
         });
+        //adding the const for the feature layer
+const My_entry_point_in_the_US = new FeatureLayer({
+ url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/My_entry_point_in_the_US/FeatureServer",
+ 
+ //adding the popup here
+ outFields: ["Airport_Name", "City", "State", "Country", "Airport_Type", "Airport_Code", "Elevation", "Timezone", "Region", "Wikipedia", "Website"],
+
+});
+
+//adding the feature layer to the map
+map.add(my_entry_point_in_the_US);
+
+// Set the point layer's LayerInfo
+const pointInfos = {
+ layer: myAirports
+}
+
+// Begin Editor constructor
+const editor = new Editor({
+ view: view,
+ layerInfos: [pointInfos]
+ }); // End Editor constructor
+
+// Add the widget to the view
+view.ui.add(editor, "top-right");
      });
     </script>
     
-
+    <!-- addingthe content of the notification button -->
+    <script>
+        document.querySelector(".notificationBtn").addEventListener("click", () => {
+            alert("You have 1 new notification");
+        });
+    </script>
   </head>
   <body>
     
-   <!-- hello world text to check if everything worked -->
-   <h1>Welcome to the immigrant path website. Here you can find information about the immigrants and you can also add your information. </h1>
+<head>
+    <!-- Other head elements -->
 
+    <style>
+        h1 {
+            text-align: center;
+            color: blue;
+            font-weight: bold; /* This will make the text bold */
+        }
+    </style>
+</head>
+<body>  
+    <!-- Other body elements -->
+
+    <h1>Welcome to the immigrant path website. Here you can find information about the immigrants and you can also add your information. </h1>
+
+    <!-- Other body elements -->
+</body>
 
     <!-- adding the button to add a record -->
     <a href="https://arcg.is/e1PKv"target="_blank" class="addRecordBtn">Click here to add your information</a>
 
+     <!-- Notification button -->
+     <a href="#" class="notificationBtn">Notifications</a>
+
+      <!-- Buttons -->
+  <a href="#" class="btn homeBtn">Home</a>
+  <a href="#" class="btn govBtn">Government</a>
+  <a href="#" class="btn agriBtn">Agricultural Businesses</a>
+  <a href="#" class="btn laborBtn">Labor</a>
+  <a href="#" class="btn downloadBtn">Download Data Here</a>
+
+  <!-- Other body elements -->
    <div id="viewDiv"></div>
+   <div style="display: flex; justify-content: center;">
+    <iframe width="460" height="215" src="https://www.youtube.com/embed/8cyKPK91rkY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
   </body>
 </html>
