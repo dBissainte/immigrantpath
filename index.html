@@ -121,8 +121,7 @@
 
    <!-- loding the modules-->
    <script>
-    require([ "esri/config" , "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Search", "esri/layers/FeatureLayer", "esri/widgets/Editor", "esri/widgets/Legend"
-     ], (esriconfig, Map, MapView, Locate, Search, FeatureLayer, Editor, Legend) => {
+    require([ "esri/config" , "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Search", "esri/layers/FeatureLayer", "esri/widgets/Editor"], (esriconfig, Map, MapView, Locate, Search, FeatureLayer, Editor) => {
 
       //adding in API key
       esriconfig.apikey = "AAPK38961f69b763446a8a93074277f6c658monrdVmdEHRWTyT7kHHF_0qYVXyDdCF8RQ2Z8pUR4r52dvVz8Ytp2CV1iEQsh2yt"
@@ -150,6 +149,35 @@
           view: view
         });
 
+        // adding the feature layer for the icon
+        const my_entry_point_in_the_US_renderer = {
+            type: "simple",
+            symbol: { 
+                type: "picture-marker",
+                url: "https://raw.githubusercontent.com/dBissainte/jstackwrite/main/airport_icon.png",
+                width: "18px",
+                height: "18px"
+            }
+        };
+         const my_entry_point_in_the_US_labels = {
+            symbol: {
+                type: "text",
+                color: "black",
+                haloColor: "white",
+                haloSize: "1px",
+                font: {
+                    size: "12px",
+                    family: "Noto Sans",
+                    style: "italic",
+                    weight: "normal"
+                }
+            },
+            labelPlacement: "above-center",
+            labelExpressionInfo: {
+                expression: "$feature.Airport_Name"
+            }
+        }
+
         // Create featurelayer from feature service 
          const layer = new FeatureLayer({ 
         // URL to the service 
@@ -172,58 +200,17 @@
         position: "top-left",
         index: 2
         });
-    });
+        //adding the const for the feature layer
+        const my_entry_point_in_the_US = new FeatureLayer({
+        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/My_entry_point_in_the_US/FeatureServer",
+        renderer: my_entry_point_in_the_US_renderer,
+        labelingInfo: [my_entry_point_in_the_US_labels],
+        outFields: ["Airport_Name", "City", "State", "Country", "Airport_Type", "Airport_Code", "Elevation", "Timezone", "Region", "Wikipedia", "Website"],
+       });
 
-       //adding renderer to the feature layer
-       const my_entry_point_in_the_US_renderer = {
-        type: "simple",
-        symbol: { 
-            type: "picture-marker",
-            url: "https://raw.githubusercontent.com/dBissainte/jstackwrite/main/airport_icon.png",
-            color: "blue",
-            size: "8px",
-            outline: {
-                color: "black",
-                width: 1
-            }
-        }
-    };
-
-        //adding the legend widget
-        const my_entry_point_in_the_US_labels = {
-          symbol: {
-            type: "text",
-            color: "black",
-            haloColor: "white",
-            haloSize: "1px",
-            font: {
-              size: "12px",
-              family: "Noto Sans",
-              style: "italic",
-              weight: "normal"
-            }
-          },
-            
-        labelplacement: "botttom-right",
-        labelExpressionInfo: {
-          expression: "$feature.Airport_Name"
-        }
-        };
-     
-     //adding the const for the feature layer
-const my_entry_point_in_the_US = new FeatureLayer({
- url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/My_entry_point_in_the_US/FeatureServer",
-    renderer: my_entry_point_in_the_US_renderer,
-    labelingInfo: [my_entry_point_in_the_US_labels],
-     
- //adding the popup here
- outFields: ["Airport_Name", "City", "State", "Country", "Airport_Type", "Airport_Code", "Elevation", "Timezone", "Region", "Wikipedia", "Website"],
-
-});
-
-//adding the feature layer to the map
-view.when(function() {
-map.add(my_entry_point_in_the_US);
+       view.when(() => {
+        map.add(my_entry_point_in_the_US);
+         });
 
 // Set the point layer's LayerInfo
 const pointInfos = {
@@ -233,12 +220,22 @@ const pointInfos = {
 // Begin Editor constructor
 const editor = new Editor({
  view: view,
- layerInfos: [pointInfos]
+ layerInfos: [{layer: my_entry_point_in_the_US}]
  }); // End Editor constructor
 
 // Add the widget to the view
 view.ui.add(editor, "top-right");
+ let legend = new Legend({
+    view: view,
+    layerInfos: [
+        {
+            layer: my_entry_point_in_the_US,
+            title: "Entry Point in the US"
+        }
+    ]
      });
+     view.ui.add(legend, "bottom-right");
+    });
     </script>
     
     <!-- addingthe content of the notification button -->
@@ -289,3 +286,5 @@ view.ui.add(editor, "top-right");
   </div>
   </body>
 </html>
+
+
